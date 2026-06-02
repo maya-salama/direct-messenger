@@ -3,6 +3,7 @@
 # 74793795
 
 import ds_protocol
+import json
 
 def test_extract_json_ok():
     msg = '{"response": {"type": "ok", "message": "Direct message sent"}}'
@@ -11,16 +12,26 @@ def test_extract_json_ok():
 
 
 def test_extract_json_messages():
-    pass
+    msg = '{"response": {"type": "ok", "messages": [{"message": "Hi!", "from": "markb", "timestamp": "123"}]}}'
+    result = ds_protocol.extract_json(msg)
+    assert result.messages is not None
+    assert result.messages[0]["from"] == "markb"
 
 
 def test_extract_json_token():
-    pass
+    msg = '{"response": {"type": "ok", "token": "abc123"}}'
+    result = ds_protocol.extract_json(msg)
+    assert result.token == "abc123"
 
 
 def test_extract_json_format():
-    pass
+    result = ds_protocol.format_retrieve_new("abc123")
+    parsed = json.loads(result)
+    assert parsed["token"] == "abc123"
+    assert parsed["directmessage"] == "new"
 
 
 def test_extract_json_error():
-    pass
+    msg = '{"response": {"type": "error", "message": "Invalid token"}}'
+    result = ds_protocol.extract_json(msg)
+    assert result.status == "error"
