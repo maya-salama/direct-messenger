@@ -45,3 +45,25 @@ def format_post(token, entry, timestamp):
 def format_bio(token, bio, timestamp):
     d = {"token": token, "bio": {"entry": bio, "timestamp": timestamp}}
     return json.dumps(d)
+
+
+def format_direct_message(token, entry, recipient, timestamp):
+    d = {
+        "token": token,
+        "directmessage": {
+            "entry": entry,
+            "recipient": recipient,
+            "timestamp": timestamp
+        }
+    }
+    return json.dumps(d)
+
+
+def format_retrieve_new(token):
+    d = {"token": token, "directmessage": "new"}
+    return json.dumps(d)
+
+
+def format_retrieve_all(token):
+    d = {"token": token, "directmessage": "all"}
+    return json.dumps(d)
