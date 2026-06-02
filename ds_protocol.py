@@ -14,7 +14,7 @@ from collections import namedtuple
 
 # Namedtuple to hold the values retrieved from json messages.
 
-DataTuple = namedtuple('DataTuple', ['status', 'token'])
+DataTuple = namedtuple('DataTuple', ['status', 'token', 'messages'])
 
 
 def extract_json(json_msg: str) -> DataTuple:
@@ -27,7 +27,8 @@ def extract_json(json_msg: str) -> DataTuple:
         json_obj = json.loads(json_msg)
         status = json_obj['response']['type']
         token = json_obj['response'].get('token')
-        return DataTuple(status, token)
+        messages = json_obj['response'].get('messages')
+        return DataTuple(status, token, messages)
     except json.JSONDecodeError:
         print("Json cannot be decoded.")
 
