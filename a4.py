@@ -208,6 +208,26 @@ class MainApp(tk.Frame):
         # You must configure and instantiate your
         # DirectMessenger instance after this line.
         self.direct_messenger = DirectMessenger(self.server, self.username, self.password)
+    
+    def new_profile(self):
+        file_path = filedialog.asksaveasfilename(
+            filetypes=[("DSU Files", "*.dsu")],
+            defaultextension=".dsu"
+        )
+        if file_path:
+            self.dsu_path = file_path
+            self.profile.save_profile(file_path)
+    
+
+    def open_profile(self):
+        file_path = filedialog.askopenfilename(
+            filetypes=[("DSU Files", "*.dsu")]
+        )
+        if file_path:
+            self.dsu_path = file_path
+            self.profile.load_profile(file_path)
+            for friend in self.profile.friends:
+                self.body.insert_contact(friend)
 
 
     def publish(self, message:str):
@@ -233,9 +253,9 @@ class MainApp(tk.Frame):
         menu_file = tk.Menu(menu_bar)
 
         menu_bar.add_cascade(menu=menu_file, label='File')
-        menu_file.add_command(label='New')
-        menu_file.add_command(label='Open...')
-        menu_file.add_command(label='Close')
+        menu_file.add_command(label='New', command=self.new_profile)
+        menu_file.add_command(label='Open...', command=self.open_profile)
+        menu_file.add_command(label='Close', command=self.root.quit)
 
         settings_file = tk.Menu(menu_bar)
         menu_bar.add_cascade(menu=settings_file, label='Settings')
