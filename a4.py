@@ -211,6 +211,7 @@ class MainApp(tk.Frame):
     
     def new_profile(self):
         file_path = filedialog.asksaveasfilename(
+            parent=self.root,
             filetypes=[("DSU Files", "*.dsu")],
             defaultextension=".dsu"
         )
