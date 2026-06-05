@@ -4,6 +4,7 @@
 
 import socket
 import ds_protocol
+import time
 
 class DirectMessage:
     def __init__(self):
@@ -30,3 +31,20 @@ class DirectMessenger:
             self.token = result.token
         except Exception:
             self.token = None
+
+    def send(self, message, recipient):
+        try:
+            if self.token is None:
+                return False
+            direct_message = ds_protocol.format_direct_message(self.token, message, recipient, time.time())
+            self.send_file.write(direct_message + "\r\n")
+            self.send_file.flush()
+            read = self.recv_file.readline()
+            result = ds_protocol.extract_json(read)
+            if result.status == "ok":
+                return True
+            else:
+                return False
+        except Exception:
+            return False
+        
