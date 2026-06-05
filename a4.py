@@ -182,12 +182,16 @@ class MainApp(tk.Frame):
             self.profile.messages[self.recipient].append(
                 {"message": message, "recipient": self.recipient}
             )
+            if self.dsu_path:
+                self.profile.save_profile(self.dsu_path)
 
     def add_contact(self):
         contact = tk.simpledialog.askstring("Add Contact", "Enter username:")
         if contact is not None:
             self.body.insert_contact(contact)
             self.profile.friends.append(contact)
+            if self.dsu_path:
+                self.profile.save_profile(self.dsu_path)
 
     def recipient_selected(self, recipient):
         self.recipient = recipient
@@ -217,6 +221,7 @@ class MainApp(tk.Frame):
         )
         if file_path:
             self.dsu_path = file_path
+            open(file_path, "w").close()
             self.profile.save_profile(file_path)
     
 
