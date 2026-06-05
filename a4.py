@@ -5,6 +5,8 @@
 import tkinter as tk
 from tkinter import ttk, filedialog
 from typing import Text
+from Profile import Profile
+from ds_messenger import DirectMessenger
 
 
 class Body(tk.Frame):
@@ -159,7 +161,9 @@ class MainApp(tk.Frame):
         self.recipient = ''
         # You must implement this! You must configure and
         # instantiate your DirectMessenger instance after this line.
-        #self.direct_messenger = ... continue!
+        self.direct_messenger = None
+        self.profile = Profile()
+        self.dsu_path = None
 
         # After all initialization is complete,
         # call the _draw method to pack the widgets
@@ -168,15 +172,17 @@ class MainApp(tk.Frame):
         self.body.insert_contact("studentexw23") # adding one example student.
 
     def send_message(self):
-        # You must implement this!
-        pass
+        message = self.body.get_text_entry()
+        if message and self.recipient and self.direct_messenger:
+            self.direct_messenger.send(message, self.recipient)
+            self.body.insert_user_message(message)
+            self.body.set_text_entry('')
 
     def add_contact(self):
-        # You must implement this!
-        # Hint: check how to use tk.simpledialog.askstring to retrieve
-        # the name of the new contact, and then use one of the body
-        # methods to add the contact to your contact list
-        pass
+        contact = tk.simpledialog.askstring("Add Contact", "Enter username:")
+        if contact is not None:
+            self.body.insert_contact(contact)
+            self.profile.friends.append(contact)
 
     def recipient_selected(self, recipient):
         self.recipient = recipient
@@ -190,6 +196,8 @@ class MainApp(tk.Frame):
         # You must implement this!
         # You must configure and instantiate your
         # DirectMessenger instance after this line.
+        self.direct_messenger = DirectMessenger(self.server, self.username, self.password)
+
 
     def publish(self, message:str):
         # You must implement this!
