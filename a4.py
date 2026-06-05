@@ -177,6 +177,11 @@ class MainApp(tk.Frame):
             self.direct_messenger.send(message, self.recipient)
             self.body.insert_user_message(message)
             self.body.set_text_entry('')
+            if self.recipient not in self.profile.messages:
+                self.profile.messages[self.recipient] = []
+            self.profile.messages[self.recipient].append(
+                {"message": message, "recipient": self.recipient}
+            )
 
     def add_contact(self):
         contact = tk.simpledialog.askstring("Add Contact", "Enter username:")
@@ -186,6 +191,12 @@ class MainApp(tk.Frame):
 
     def recipient_selected(self, recipient):
         self.recipient = recipient
+        self.body.entry_editor.delete(1.0, tk.END)
+        for msg in self.profile.messages.get(recipient, []):
+            if "from" in msg:
+                self.body.insert_contact_message(msg["message"])
+            else:
+                self.body.insert_user_message(msg["message"])
 
     def configure_server(self):
         ud = NewContactDialog(self.root, "Configure Account",
@@ -208,6 +219,11 @@ class MainApp(tk.Frame):
             new_messages = self.direct_messenger.retrieve_new()
             for msg in new_messages:
                 self.body.insert_contact_message(msg.message)
+                if msg.recipient not in self.profile.messages:
+                    self.profile.messages[msg.recipient] = []
+                self.profile.messages[msg.recipient].append(
+                    {"message": msg.message, "from": msg.recipient}
+                )
         self.root.after(2000, self.check_new)
 
     def _draw(self):
