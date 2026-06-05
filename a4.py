@@ -204,8 +204,11 @@ class MainApp(tk.Frame):
         pass
 
     def check_new(self):
-        # You must implement this!
-        pass
+        if self.direct_messenger is not None:
+            new_messages = self.direct_messenger.retrieve_new()
+            for msg in new_messages:
+                self.body.insert_contact_message(msg.message)
+        self.root.after(2000, self.check_new)
 
     def _draw(self):
         # Build a menu and add it to the root frame.
