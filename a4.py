@@ -97,7 +97,7 @@ class Footer(tk.Frame):
             self._send_callback()
 
     def _draw(self):
-        save_button = tk.Button(master=self, text="Send", width=20)
+        save_button = tk.Button(master=self, text="Send", width=20, command=self.send_click)
         # You must implement this.
         # Here you must configure the button to bind its click to
         # the send_click() function.
@@ -127,6 +127,13 @@ class NewContactDialog(tk.simpledialog.Dialog):
         self.username_entry = tk.Entry(frame, width=30)
         self.username_entry.insert(tk.END, self.user)
         self.username_entry.pack()
+
+        self.password_label = tk.Label(frame, width=30, text="Password")
+        self.password_label.pack()
+        self.password_entry = tk.Entry(frame, width=30)
+        self.password_entry.insert(tk.END, self.pwd)
+        self.password_entry.pack()
+        self.password_entry["show"] = "*"
 
         # You need to implement also the region for the user to enter
         # the Password. The code is similar to the Username you see above
