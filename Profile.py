@@ -110,6 +110,9 @@ class Profile:
         self.password = password  # REQUIRED
         self.bio = ''            # OPTIONAL
         self._posts = []         # OPTIONAL
+        self.friends = []
+        self.messages = {}
+
 
     """
 
@@ -206,6 +209,8 @@ class Profile:
                 for post_obj in obj['_posts']:
                     post = Post(post_obj['entry'], post_obj['timestamp'])
                     self._posts.append(post)
+                self.friends = obj.get("friends", [])
+                self.messages = obj.get("messages", {})
                 f.close()
             except Exception as ex:
                 raise DsuProfileError(ex)
