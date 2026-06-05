@@ -48,3 +48,23 @@ class DirectMessenger:
         except Exception:
             return False
         
+
+    def retrieve_new(self):
+        try:
+            if self.token is None:
+                return []
+            format_msg = ds_protocol.format_retrieve_new(self.token)
+            self.send_file.write(format_msg + "\r\n")
+            self.send_file.flush()
+            read = self.recv_file.readline()
+            result = ds_protocol.extract_json(read)
+            messages = []
+            for m in result.messages:
+                dm = DirectMessage()
+                dm.message = m["message"]
+                dm.recipient = m["from"]
+                dm.timestamp = m["timestamp"]
+                messages.append(dm)
+            return messages
+        except Exception:
+            return []
