@@ -113,7 +113,6 @@ class Profile:
         self.friends = []
         self.messages = {}
 
-
     """
 
     add_post accepts a Post object as parameter and appends it to the posts

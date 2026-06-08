@@ -6,11 +6,13 @@ import socket
 import ds_protocol
 import time
 
+
 class DirectMessage:
     def __init__(self):
         self.recipient = None
         self.message = None
         self.timestamp = None
+
 
 class DirectMessenger:
     def __init__(self, dsuserver=None, username=None, password=None):
@@ -26,7 +28,8 @@ class DirectMessenger:
             send_file = client.makefile("w")
             recv_file = client.makefile("r")
             if self.token is None:
-                join_msg = ds_protocol.format_join(self.username, self.password)
+                join_msg = ds_protocol.format_join(
+                    self.username, self.password)
                 send_file.write(join_msg + "\r\n")
                 send_file.flush()
                 resp = recv_file.readline()
@@ -36,7 +39,8 @@ class DirectMessenger:
                 else:
                     client.close()
                     return False
-            direct_message = ds_protocol.format_direct_message(self.token, message, recipient, time.time())
+            direct_message = ds_protocol.format_direct_message(
+                self.token, message, recipient, time.time())
             send_file.write(direct_message + "\r\n")
             send_file.flush()
             read = recv_file.readline()
@@ -48,7 +52,6 @@ class DirectMessenger:
         except Exception as e:
             print(f"Error: {e}")
             return False
-        
 
     def retrieve_new(self):
         try:
@@ -57,7 +60,8 @@ class DirectMessenger:
             send_file = client.makefile("w")
             recv_file = client.makefile("r")
             if self.token is None:
-                join_msg = ds_protocol.format_join(self.username, self.password)
+                join_msg = ds_protocol.format_join(self.username,
+                                                   self.password)
                 send_file.write(join_msg + "\r\n")
                 send_file.flush()
                 resp = recv_file.readline()
@@ -85,7 +89,6 @@ class DirectMessenger:
         except Exception as e:
             print(f"Error: {e}")
             return []
-    
 
     def retrieve_all(self):
         try:
@@ -94,7 +97,8 @@ class DirectMessenger:
             send_file = client.makefile("w")
             recv_file = client.makefile("r")
             if self.token is None:
-                join_msg = ds_protocol.format_join(self.username, self.password)
+                join_msg = ds_protocol.format_join(self.username,
+                                                   self.password)
                 send_file.write(join_msg + "\r\n")
                 send_file.flush()
                 resp = recv_file.readline()
