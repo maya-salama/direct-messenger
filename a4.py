@@ -58,16 +58,16 @@ class Body(tk.Frame):
         self.posts_tree.pack(fill=tk.BOTH, side=tk.TOP,
                              expand=True, padx=5, pady=5)
 
-        entry_frame = tk.Frame(master=self, bg="")
+        entry_frame = tk.Frame(master=self)
         entry_frame.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
 
-        editor_frame = tk.Frame(master=entry_frame, bg="red")
+        editor_frame = tk.Frame(master=entry_frame)
         editor_frame.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
 
-        scroll_frame = tk.Frame(master=entry_frame, bg="blue", width=10)
+        scroll_frame = tk.Frame(master=entry_frame, width=10)
         scroll_frame.pack(fill=tk.BOTH, side=tk.LEFT, expand=False)
 
-        message_frame = tk.Frame(master=self, bg="yellow")
+        message_frame = tk.Frame(master=self)
         message_frame.pack(fill=tk.BOTH, side=tk.TOP, expand=False)
 
         self.message_editor = tk.Text(message_frame, width=0, height=5)

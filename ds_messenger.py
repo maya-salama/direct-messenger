@@ -58,7 +58,7 @@ class DirectMessenger:
             recv_file = client.makefile("r")
             if self.token is None:
                 join_msg = ds_protocol.format_join(self.username, self.password)
-                send_file.write(join_msg, "\r\n")
+                send_file.write(join_msg + "\r\n")
                 send_file.flush()
                 resp = recv_file.readline()
                 result = ds_protocol.extract_json(resp)
@@ -70,7 +70,7 @@ class DirectMessenger:
             format_msg = ds_protocol.format_retrieve_new(self.token)
             send_file.write(format_msg + "\r\n")
             send_file.flush()
-            read = self.recv_file.readline()
+            read = recv_file.readline()
             client.close()
             result = ds_protocol.extract_json(read)
             messages = []
