@@ -18,77 +18,110 @@ class DirectMessenger:
         self.dsuserver = dsuserver
         self.username = username
         self.password = password
-        try:
-            self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.client.connect((self.dsuserver, 3001))
-            self.send_file = self.client.makefile("w")
-            self.recv_file = self.client.makefile("r")
-            join_msg = ds_protocol.format_join(self.username, self.password)
-            self.send_file.write(join_msg + "\r\n")
-            self.send_file.flush()
-            resp = self.recv_file.readline()
-            result = ds_protocol.extract_json(resp)
-            self.token = result.token
-        except Exception:
-            self.token = None
 
     def send(self, message, recipient):
         try:
+            client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            client.connect((self.dsuserver, 3001))
+            send_file = client.makefile("w")
+            recv_file = client.makefile("r")
             if self.token is None:
-                return False
+                join_msg = ds_protocol.format_join(self.username, self.password)
+                send_file.write(join_msg + "\r\n")
+                send_file.flush()
+                resp = recv_file.readline()
+                result = ds_protocol.extract_json(resp)
+                if result.status == "ok":
+                    self.token = result.token
+                else:
+                    client.close()
+                    return False
             direct_message = ds_protocol.format_direct_message(self.token, message, recipient, time.time())
-            self.send_file.write(direct_message + "\r\n")
-            self.send_file.flush()
-            read = self.recv_file.readline()
+            send_file.write(direct_message + "\r\n")
+            send_file.flush()
+            read = recv_file.readline()
+            client.close()
             result = ds_protocol.extract_json(read)
             if result.status == "ok":
                 return True
-            else:
-                return False
-        except Exception:
+            return False
+        except Exception as e:
+            print(f"Error: {e}")
             return False
         
 
     def retrieve_new(self):
         try:
+            client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            client.connect((self.dsuserver, 3001))
+            send_file = client.makefile("w")
+            recv_file = client.makefile("r")
             if self.token is None:
-                return []
+                join_msg = ds_protocol.format_join(self.username, self.password)
+                send_file.write(join_msg, "\r\n")
+                send_file.flush()
+                resp = recv_file.readline()
+                result = ds_protocol.extract_json(resp)
+                if result.status == "ok":
+                    self.token = result.token
+                else:
+                    client.close()
+                    return []
             format_msg = ds_protocol.format_retrieve_new(self.token)
-            self.send_file.write(format_msg + "\r\n")
-            self.send_file.flush()
+            send_file.write(format_msg + "\r\n")
+            send_file.flush()
             read = self.recv_file.readline()
+            client.close()
             result = ds_protocol.extract_json(read)
             messages = []
-            for m in result.messages:
-                dm = DirectMessage()
-                dm.message = m["message"]
-                dm.recipient = m["from"]
-                dm.timestamp = m["timestamp"]
-                messages.append(dm)
+            if result.status == "ok" and result.messages:
+                for m in result.messages:
+                    dm = DirectMessage()
+                    dm.message = m["message"]
+                    dm.recipient = m["from"]
+                    dm.timestamp = m["timestamp"]
+                    messages.append(dm)
             return messages
-        except Exception:
+        except Exception as e:
+            print(f"Error: {e}")
             return []
     
 
     def retrieve_all(self):
         try:
+            client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            client.connect((self.dsuserver, 3001))
+            send_file = client.make_file("w")
+            recv_file = client.make_file("r")
             if self.token is None:
-                return []
+                join_msg = ds_protocol.format_join(self.username, self.password)
+                send_file.write(join_msg + "\r\n")
+                send_file.flush()
+                resp = recv_file.readline()
+                result = ds_protocol.extract_json(resp)
+                if result.status == "ok":
+                    self.token = result.token
+                else:
+                    client.close()
+                    return []
             format_msg = ds_protocol.format_retrieve_all(self.token)
-            self.send_file.write(format_msg + "\r\n")
-            self.send_file.flush()
-            read = self.recv_file.readline()
+            send_file.write(format_msg + "\r\n")
+            send_file.flush()
+            read = recv_file.readline()
+            client.close()
             result = ds_protocol.extract_json(read)
             messages = []
-            for m in result.messages:
-                dm = DirectMessage()
-                dm.message = m["message"]
-                if "from" in m:
-                    dm.recipient = m["from"]
-                else:
-                    dm.recipient = m["recipient"]
-                dm.timestamp = m["timestamp"]
-                messages.append(dm)
+            if result.status == "ok" and result.messages:
+                for m in result.messages:
+                    dm = DirectMessage()
+                    dm.message = m["message"]
+                    if "from" in m:
+                        dm.recipient = m["from"]
+                    else:
+                        dm.recipient = m["recipient"]
+                    dm.timestamp = m["timestamp"]
+                    messages.append(dm)
             return messages
-        except Exception:
+        except Exception as e:
+            print(f"Error: {e}")
             return []
