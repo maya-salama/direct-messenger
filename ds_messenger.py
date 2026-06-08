@@ -74,7 +74,7 @@ class DirectMessenger:
             client.close()
             result = ds_protocol.extract_json(read)
             messages = []
-            if result.status == "ok" and result.messages:
+            if result.status == "ok" and result.messages is not None:
                 for m in result.messages:
                     dm = DirectMessage()
                     dm.message = m["message"]
@@ -91,8 +91,8 @@ class DirectMessenger:
         try:
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client.connect((self.dsuserver, 3001))
-            send_file = client.make_file("w")
-            recv_file = client.make_file("r")
+            send_file = client.makefile("w")
+            recv_file = client.makefile("r")
             if self.token is None:
                 join_msg = ds_protocol.format_join(self.username, self.password)
                 send_file.write(join_msg + "\r\n")
@@ -111,7 +111,7 @@ class DirectMessenger:
             client.close()
             result = ds_protocol.extract_json(read)
             messages = []
-            if result.status == "ok" and result.messages:
+            if result.status == "ok" and result.messages is not None:
                 for m in result.messages:
                     dm = DirectMessage()
                     dm.message = m["message"]

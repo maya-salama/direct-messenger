@@ -6,8 +6,11 @@ import ds_messenger
 
 
 def test_direct_messenger_init():
-    dm = ds_messenger.DirectMessenger("localhost", "testuser", "testpass")
-    assert dm.token is not None
+    dm = ds_messenger.DirectMessenger("127.0.0.1", "testuser", "testpass")
+    assert dm.dsuserver == "127.0.0.1"
+    assert dm.username == "testuser"
+    assert dm.password == "testpass"
+    assert dm.token is None
 
 
 def test_send():
