@@ -29,3 +29,21 @@ def test_retrieve_all():
     dm = ds_messenger.DirectMessenger("localhost", "testuser", "testpass")
     result = dm.retrieve_all()
     assert isinstance(result, list)
+
+
+def test_send_invalid_server():
+    dm = ds_messenger.DirectMessenger("invalidserver", "user", "pass")
+    result = dm.send("Hello!", "someone")
+    assert result is False
+
+
+def test_retrieve_new_invalid_server():
+    dm = ds_messenger.DirectMessenger("invalidserver", "user", "pass")
+    result = dm.retrieve_new()
+    assert result == []
+
+
+def test_retrieve_all_invalid_server():
+    dm = ds_messenger.DirectMessenger("invalidserver", "user", "pass")
+    result = dm.retrieve_all()
+    assert result == []

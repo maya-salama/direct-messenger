@@ -35,3 +35,20 @@ def test_extract_json_error():
     msg = '{"response": {"type": "error", "message": "Invalid token"}}'
     result = ds_protocol.extract_json(msg)
     assert result.status == "error"
+
+
+def test_format_post():
+    result = ds_protocol.format_post("abc123", "Hello!", 12345)
+    parsed = json.loads(result)
+    assert parsed["token"] == "abc123"
+    assert parsed["post"]["entry"] == "Hello!"
+
+def test_format_bio():
+    result = ds_protocol.format_bio("abc123", "My bio", 12345)
+    parsed = json.loads(result)
+    assert parsed["token"] == "abc123"
+    assert parsed["bio"]["entry"] == "My bio"
+
+def test_extract_json_invalid():
+    result = ds_protocol.extract_json("not valid json")
+    assert result is None
