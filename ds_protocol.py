@@ -9,6 +9,8 @@
 # salamam2@uci.edu
 # 74793795
 
+"""Module for formatting and parsing DS server protocol messages"""
+
 import json
 from collections import namedtuple
 
@@ -31,24 +33,29 @@ def extract_json(json_msg: str) -> DataTuple:
         return DataTuple(status, token, messages)
     except json.JSONDecodeError:
         print("Json cannot be decoded.")
+        return None
 
 
 def format_join(username, password):
+    """Format a join message for the DS Server."""
     d = {"join": {"username": username, "password": password, "token": ""}}
     return json.dumps(d)
 
 
 def format_post(token, entry, timestamp):
+    """Format a post message for the DS Server."""
     d = {"token": token, "post": {"entry": entry, "timestamp": timestamp}}
     return json.dumps(d)
 
 
 def format_bio(token, bio, timestamp):
+    """Format a bio message for the DS Server."""
     d = {"token": token, "bio": {"entry": bio, "timestamp": timestamp}}
     return json.dumps(d)
 
 
 def format_direct_message(token, entry, recipient, timestamp):
+    """Format a direct message for the DS Server."""
     d = {
         "token": token,
         "directmessage": {
@@ -61,10 +68,12 @@ def format_direct_message(token, entry, recipient, timestamp):
 
 
 def format_retrieve_new(token):
+    """Format a request for new messages from the DS Server."""
     d = {"token": token, "directmessage": "new"}
     return json.dumps(d)
 
 
 def format_retrieve_all(token):
+    """Format a request for all messages from the DS Server."""
     d = {"token": token, "directmessage": "all"}
     return json.dumps(d)

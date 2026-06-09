@@ -2,12 +2,15 @@
 # salamam2@uci.edu
 # 74793795
 
+"""Module for sending and receiving direct messages on the DS Platform"""
+
 import socket
-import ds_protocol
 import time
+import ds_protocol
 
 
 class DirectMessage:
+    """Represents a direct message with recipient, message, and timestamp"""
     def __init__(self):
         self.recipient = None
         self.message = None
@@ -15,6 +18,7 @@ class DirectMessage:
 
 
 class DirectMessenger:
+    """Handles sending and receiving direct messages on the DS Server"""
     def __init__(self, dsuserver=None, username=None, password=None):
         self.token = None
         self.dsuserver = dsuserver
@@ -22,6 +26,7 @@ class DirectMessenger:
         self.password = password
 
     def send(self, message, recipient):
+        """Send a direct message to a recipient. Returns True if successful"""
         try:
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client.connect((self.dsuserver, 3001))
@@ -54,6 +59,7 @@ class DirectMessenger:
             return False
 
     def retrieve_new(self):
+        """Retrieve new unread messages. Returns list of DirectMessage objects"""
         try:
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client.connect((self.dsuserver, 3001))
@@ -91,6 +97,7 @@ class DirectMessenger:
             return []
 
     def retrieve_all(self):
+        """Retrieve all messages. Returns list of DirectMessage objects"""
         try:
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client.connect((self.dsuserver, 3001))
