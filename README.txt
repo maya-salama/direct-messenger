@@ -1,5 +1,9 @@
 Assignment 5: Distributed Social Messenger
 
+# Maya Salama
+# salamam2@uci.edu
+# 74793795
+
 Assignment 5 is a direct messaging app in which users can 
 send and receives messages to one another on the DSP platform. 
 The layout of the app includes messages being displayed on the 

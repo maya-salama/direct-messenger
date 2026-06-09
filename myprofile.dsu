@@ -1,1 +1,0 @@
-{"dsuserver": null, "username": null, "password": null, "bio": "", "_posts": [], "friends": ["testuser"], "messages": {"testuser": [{"message": "hello", "recipient": "testuser"}, {"message": "hello", "from": "testuser"}, {"message": "hi maya", "recipient": "testuser"}]}}
