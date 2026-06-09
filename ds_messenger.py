@@ -59,7 +59,8 @@ class DirectMessenger:
             return False
 
     def retrieve_new(self):
-        """Retrieve new unread messages. Returns list of DirectMessage objects"""
+        """Retrieve new unread messages.
+           Returns list of DirectMessage objects"""
         try:
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client.connect((self.dsuserver, 3001))

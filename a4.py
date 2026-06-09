@@ -39,7 +39,8 @@ class Body(tk.Frame):
         """Insert a contact entry into the treeview"""
         if len(contact) > 25:
             contact = contact[:24] + "..."
-        contact_id = self.posts_tree.insert('', contact_id, contact_id, text=contact)
+        contact_id = self.posts_tree.insert('', contact_id,
+                                            contact_id, text=contact)
 
     def insert_user_message(self, message: str):
         """Display a sent message right-aligned"""
@@ -263,12 +264,21 @@ class MainApp(tk.Frame):
         if self.direct_messenger is not None:
             new_messages = self.direct_messenger.retrieve_new()
             for msg in new_messages:
-                self.body.insert_contact_message(msg.message)
-                if msg.recipient not in self.profile.messages:
-                    self.profile.messages[msg.recipient] = []
-                self.profile.messages[msg.recipient].append(
-                    {"message": msg.message, "from": msg.recipient}
+                sender = msg.recipient
+                if sender not in self.profile.messages:
+                    self.profile.messages[sender] = []
+                self.profile.messages[sender].append(
+                    {"message": msg.message, "from": sender, 
+                     "timestamp": msg.timestamp}
                 )
+                if sender not in self.body._contacts:
+                    self.body.insert_contact(sender)
+                if sender not in self.profile.friends:
+                    self.profile.friends.append(sender)
+                if sender == self.recipient:
+                    self.body.insert_contact_message(msg.message)
+            if new_messages and self.dsu_path:
+                self.profile.save_profile(self.dsu_path)
         self.root.after(2000, self.check_new)
 
     def _draw(self):
